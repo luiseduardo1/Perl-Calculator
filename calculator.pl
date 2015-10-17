@@ -15,8 +15,8 @@ my $protocole = "tcp";
 my $port;
 my $number_connections = 0;
 
-my $options = GetOptions("port=i" => \$port,
-			 "calc=bool" => \$calc);
+my $options = GetOptions("calc" => \$calc,
+                         "port=i" => \$port);
 
 if ($calc)
 {
