@@ -9,7 +9,7 @@ use IO::Socket;
 
 #Déclaration des variables
 my $NUMBER_REGEX = "\d+";
-#my $OPERATOR_REGEX = "(\+|\-|\*|\\)";
+my $OPERATOR_REGEX = "(+|-|*|\\)";
 
 my $calc;
 my $host;
@@ -39,25 +39,31 @@ if ($calc)
 		++$number_connections;
 		print "Connection $number_connections au serveur\n";
 		print $connection "Bienvenue mon ami\n";
-		while($input ne "quit\r\n")
-		{
+        #while($input ne "quit\r\n")
+        #{
             $number_1 = <$connection>;
             print $connection "Nombre 1 a ete reçu avec succes!\n";
             $number_2 = <$connection>;
             print $connection "Nombre 2 a ete reçu avec succes!\n";
             $operator = <$connection>;
-            if ($operator ~~ ['-', '+', '/', '*'])
-            {
-                print $connection "Hello";
-                #my $result = eval {"$number_1 $operator $number_2"};
-                print $connection $result;
-            }
-            else
-            {
-                print $connection "Vous avez rentre un operateur incorrect.";
-            }
-			$input = <$connection>;
-		}
+            #if (!($operator =~ m/\Q$OPERATOR_REGEX\E/))
+            #{
+                my $result = eval "$number_1 $operator $number_2";
+                if ($@)
+                {
+                    print $connection "Invalid choice of numbers";
+                }
+                else
+                {
+                    print $connection $result;
+                }
+            #}
+            #else
+            #{
+            #print $connection "Vous avez rentre un operateur incorrect.";
+            #}
+            #$input = <$connection>;
+        #}
 		#On ferme la connection
 		close($connection);
 	}
