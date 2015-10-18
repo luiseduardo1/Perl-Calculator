@@ -24,6 +24,15 @@ my $number_connections = 0;
 my $options = GetOptions("calc" => \$calc,
                          "port=i" => \$port,
                          "destination=s" => \$host);
+if (!$port)
+{
+    die "Vous devez preciser un numero de port.\n";
+}
+
+if (!$host)
+{
+    die "Vous devez preciser une adresse de destination.\n";
+}
 
 if ($calc)
 {
@@ -62,7 +71,7 @@ if ($calc)
             #}
             #else
             #{
-            #print $connection "Vous avez rentre un operateur incorrect.";
+                #print $connection "Vous avez rentre un operateur incorrect.";
             #}
             print $connection "Si vous voulez quitter entrez \"quit\"\n";
             $input = <$connection>;
