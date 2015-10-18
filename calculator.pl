@@ -13,7 +13,7 @@ my $OPERATOR_REGEX = "(+|-|*|\\)";
 
 my $calc;
 my $host;
-my $input = "";
+my $input;
 my $number_1;
 my $number_2;
 my $operator;
@@ -39,31 +39,39 @@ if ($calc)
 		++$number_connections;
 		print "Connection $number_connections au serveur\n";
 		print $connection "Bienvenue mon ami\n";
-        #while($input ne "quit\r\n")
-        #{
-            $number_1 = <$connection>;
-            print $connection "Nombre 1 a ete reçu avec succes!\n";
-            $number_2 = <$connection>;
-            print $connection "Nombre 2 a ete reçu avec succes!\n";
-            $operator = <$connection>;
+        while($input ne "quit\r\n")
+        {
+            #chomp removes trailing \r\n 
+            chomp($number_1 = <$connection>);
+            print $connection "Reçu: $number_1\n";
+            chomp($number_2 = <$connection>);
+            print $connection "Reçu: $number_2\n";
+            chomp($operator = <$connection>);
+            print $connection "Reçu: $operator\n";
             #if (!($operator =~ m/\Q$OPERATOR_REGEX\E/))
             #{
                 my $result = eval "$number_1 $operator $number_2";
                 if ($@)
                 {
-                    print $connection "Invalid choice of numbers";
+                    print $connection "Invalid choice of numbers\n";
                 }
                 else
                 {
-                    print $connection $result;
+                    print $connection "Resultat: $result\n";
                 }
             #}
             #else
             #{
             #print $connection "Vous avez rentre un operateur incorrect.";
             #}
-            #$input = <$connection>;
-        #}
+            print $connection "Si vous voulez quitter entrez \"quit\"\n";
+            $input = <$connection>;
+            $number_1 = "";
+            $number_2 = "";
+            $operator = "";
+        }
+		print $connection "Fermeture de la connection.\n";
+        $input = "";
 		#On ferme la connection
 		close($connection);
 	}
