@@ -26,12 +26,19 @@ my $options = GetOptions("calc" => \$calc,
                          "destination=s" => \$host);
 if (!$port)
 {
-    die "Vous devez preciser un numero de port.\n";
+    die "Erreur: L'option -p est obligatoire.\n";
 }
 
-if (!$host)
+if ($host and $calc)
 {
-    die "Vous devez preciser une adresse de destination.\n";
+    die "Erreur: Vous ne pouvez utiliser l'option -d et -c simultanément.\n";
+}
+else
+{
+    if (!$host and !$calc)
+    {
+        die "Erreur: Vous devez preciser une adresse de destination.\n";
+    }
 }
 
 if ($calc)
@@ -55,10 +62,9 @@ if ($calc)
             print $connection "Reçu: $number_1\n";
             chomp($number_2 = <$connection>);
             print $connection "Reçu: $number_2\n";
-            #chomp est necessaire pour que le regex marche
+            #chomp est necessaire pour que la comparaison de l'operateur fonctionne
             chomp($operator = <$connection>);
             print $connection "Reçu: $operator\n";
-            #if ($operator =~ m/\Q$OPERATOR_REGEX\E/)
             if ($operator ~~ ["+", "-", "*", "/"])
             {
                 my $result = eval "$number_1 $operator $number_2";
