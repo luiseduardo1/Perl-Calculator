@@ -2,7 +2,10 @@
 #Ajout de la librairie
 use Getopt::Long;
 use IO::Socket;
-
+use threads ('yield',
+             'stack_size' => 64*4096,
+             'exit' => 'threads_only',
+             'stringify');
 #Typedef de booleens
 #use constant false => 0;
 #use constant true => 1;
@@ -87,10 +90,13 @@ if ($calc)
         while($input ne "quit\r\n")
         {
             #chomp removes trailing \r\n 
+            print $connection "Entrez le premier nombre:\n";
             chomp($number_1 = <$connection>);
             print $connection "Reçu: $number_1\n";
+            print $connection "Entrez le deuxième nombre:\n";
             chomp($number_2 = <$connection>);
             print $connection "Reçu: $number_2\n";
+            print $connection "Entrez l'opérateur \n";
             #chomp est necessaire pour que la comparaison de l'operateur fonctionne
             chomp($operator = <$connection>);
             print $connection "Reçu: $operator\n";
@@ -128,13 +134,18 @@ else
                                            PeerPort => $port)
     or die "Impossible de se connecter sur le port $port à l'adresse $host";
     #Tant que l'utilisateur n'écris pas quit, on continue
+    async 
+    {
+        while (1) 
+        {
+            time.sleep(0.1);
+            $input = <$connection>;
+            print $input;
+        }
+    };
     while ($ligne ne "quit\n")
     {
-        #On attend que le serveur nous envoie une confirmation
-        $input = <$connection>;
-        #Affichage du message du serveur dans la console
-        #de l'utilisateur
-        print $input;
+        #On fait du multithread pour que les messages s'affiche instantanément et ne bloque pas les entrées
         #On attend que l'utilisateur entre une chaine
         $ligne = <STDIN>;
         #On envoie la chaine au serveur
