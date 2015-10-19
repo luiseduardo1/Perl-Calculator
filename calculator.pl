@@ -7,10 +7,6 @@ use IO::Socket;
 #use constant false => 0;
 #use constant true => 1;
 
-#Déclaration des variables
-my $NUMBER_REGEX = "\d+";
-my $OPERATOR_REGEX = "(+|-|*|/)";
-
 my $calc;
 my $error_log;
 my $help;
@@ -94,21 +90,20 @@ if ($calc)
             #chomp est necessaire pour que la comparaison de l'operateur fonctionne
             chomp($operator = <$connection>);
             print $connection "Reçu: $operator\n";
-            if ($operator ~~ ["+", "-", "*", "/"])
+            while (not ($operator ~~["+", "-", "*", "/"]))
             {
-                my $result = eval "$number_1 $operator $number_2";
-                if ($@)
-                {
-                    print $connection "Un des nombres est invalide\n";
-                }
-                else
-                {
-                    print $connection "Resultat: $result\n";
-                }
+                print $connection "Mauvais operateur. Recommencez\n";
+                chomp($operator = <$connection>);
+                print $connection "Reçu: $operator\n";
+            }
+            my $result = eval "$number_1 $operator $number_2";
+            if ($@)
+            {
+                print $connection "Un des nombres est invalide\n";
             }
             else
             {
-                print $connection "Vous avez rentre un operateur incorrect.\n";
+                print $connection "Resultat: $result\n";
             }
             print $connection "Si vous voulez quitter entrez \"quit\"\n";
             $input = <$connection>;
