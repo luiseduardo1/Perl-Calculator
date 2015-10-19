@@ -12,6 +12,7 @@ my $NUMBER_REGEX = "\d+";
 my $OPERATOR_REGEX = "(+|-|*|/)";
 
 my $calc;
+my $help;
 my $host;
 my $input;
 my $number_1;
@@ -23,7 +24,14 @@ my $number_connections = 0;
 
 my $options = GetOptions("calc" => \$calc,
                          "port=i" => \$port,
-                         "destination=s" => \$host);
+                         "destination=s" => \$host,
+                         "help" => \$help);
+
+if ($help)
+{
+    die "utilisation: ./calculator.pl [-h] [-p Port] [-d Destination] [-c]\n\narguments optionnels:\n-h                  affiche ce message et quitte\n-p Port             le port du serveur \n-d Destination      l'adresse de destination\n-c                  si le serveur est en mode ecoute\n";
+}
+
 if (!$port)
 {
     die "Erreur: L'option -p est obligatoire.\n";
