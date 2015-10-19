@@ -9,6 +9,7 @@ use IO::Socket;
 
 my $calc;
 my $error_log;
+my $file_name = "Error.log";
 my $help;
 my $host;
 my $input;
@@ -19,12 +20,21 @@ my $protocole = "tcp";
 my $port;
 my $number_connections = 0;
 
-sub getLoggingTime {
-
+sub getLoggingTime 
+{
     my ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst) = localtime(time);
     my $nice_timestamp = sprintf("%04d/%02d/%02d %02d:%02d:%02d",
                                  $year+1900, $mon+1, $mday, $hour, $min, $sec);
     return $nice_timestamp;
+}
+
+sub writeError 
+{
+    my $file_name = @_[0];
+    my $error_message = @_[1];
+    open($error_log, ">>$file_name");
+    print $error_log getLoggingTime();
+    print $error_log "  $error_message";
 }
 
 my $options = GetOptions("calc" => \$calc,
@@ -40,18 +50,14 @@ if ($help)
 if (!$port)
 {
     my $error = "Erreur: L'option -p est obligatoire.\n";
-    open($error_log, ">>Error.log");
-    print $error_log &getLoggingTime();
-    print $error_log "  $error";
+    writeError($file_name, $error);
     die "$error";
 }
 
 if ($host and $calc)
 {
     my $error = "Erreur: Vous ne pouvez utiliser l'option -d et -c simultanément.\n";
-    open($error_log, ">>Error.log");
-    print $error_log &getLoggingTime();
-    print $error_log "  $error";
+    writeError($file_name, $error);
     die "$error";
 }
 else
@@ -59,9 +65,7 @@ else
     if (!$host and !$calc)
     {
         my $error = "Erreur: Vous devez preciser une adresse de destination.\n";
-        open($error_log, ">>Error.log");
-        print $error_log &getLoggingTime();
-        print $error_log "  $error";
+        writeError($file_name, $error);
         die "$error";
     }
 }
