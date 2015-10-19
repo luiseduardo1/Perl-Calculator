@@ -39,7 +39,7 @@ if ($help)
 
 if (!$port)
 {
-    $error = "Erreur: L'option -p est obligatoire.\n";
+    my $error = "Erreur: L'option -p est obligatoire.\n";
     open($error_log, ">>Error.log");
     print $error_log &getLoggingTime();
     print $error_log "  $error";
@@ -48,7 +48,7 @@ if (!$port)
 
 if ($host and $calc)
 {
-    $error = "Erreur: Vous ne pouvez utiliser l'option -d et -c simultanément.\n";
+    my $error = "Erreur: Vous ne pouvez utiliser l'option -d et -c simultanément.\n";
     open($error_log, ">>Error.log");
     print $error_log &getLoggingTime();
     print $error_log "  $error";
@@ -58,7 +58,7 @@ else
 {
     if (!$host and !$calc)
     {
-        $error = "Erreur: Vous devez preciser une adresse de destination.\n";
+        my $error = "Erreur: Vous devez preciser une adresse de destination.\n";
         open($error_log, ">>Error.log");
         print $error_log &getLoggingTime();
         print $error_log "  $error";
