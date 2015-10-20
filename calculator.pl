@@ -93,7 +93,7 @@ if ($calc)
             print $connection "Entrez le premier nombre:\n";
             chomp($number_1 = <$connection>);
             print $connection "Reçu: $number_1\n";
-            while (!($number_1 =~ m{^(\d+)$}))
+            while (!($number_1 =~ m{^(\d+(\.\d+)?)$}))
             {
                 print $connection "Mauvais nombre. Recommencez.\n";
                 chomp($number_1 = <$connection>);
@@ -102,7 +102,7 @@ if ($calc)
             print $connection "Entrez le deuxième nombre:\n";
             chomp($number_2 = <$connection>);
             print $connection "Reçu: $number_2\n";
-            while (!($number_2 =~ m{^(\d+)$}))
+            while (!($number_2 =~ m{^(\d+(\.\d+)?)$}))
             {
                 print $connection "Mauvais nombre. Recommencez.\n";
                 chomp($number_2 = <$connection>);
